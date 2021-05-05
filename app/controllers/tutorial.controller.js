@@ -1,6 +1,7 @@
 const db = require("../models");
 const Tutorial = db.tutorials;
 const Op = db.Sequelize.Op;
+const Comment = db.comments;
 
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
@@ -37,7 +38,10 @@ exports.findAll = (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-  Tutorial.findAll({ where: condition })
+  Tutorial.findAll({
+    where: condition,
+    include: ["comments"]
+  })
       .then(data => {
         res.send(data);
       })
@@ -141,6 +145,34 @@ exports.findAllPublished = (req, res) => {
         res.status(500).send({
           message:
               err.message || "Some error occurred while retrieving tutorials."
+        });
+      });
+};
+
+// 创建评论
+exports.createComment = (req, res) => {
+  if (!req.body.name) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+    return;
+  }
+
+  // Create a Tutorial
+  const comment = {
+    name: req.body.name,
+    text: req.body.text,
+    tutorialId: req.params.tutorialId
+  };
+
+  Comment.create(comment)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+              err.message || "Some error occurred while creating the Tutorial."
         });
       });
 };

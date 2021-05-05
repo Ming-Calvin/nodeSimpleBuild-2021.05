@@ -6,6 +6,9 @@ module.exports = app => {
   // Create a new Tutorial
   router.post("/", tutorials.create);
 
+  // Create a new eComment
+  router.post("/:tutorialId", tutorials.createComment);
+
   // Retrieve all Tutorials
   router.get("/", tutorials.findAll);
 

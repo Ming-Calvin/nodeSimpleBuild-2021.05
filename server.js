@@ -21,9 +21,9 @@ const db = require("./app/models");
 db.sequelize.sync();
 
 // 解决需要删除现有表并重新同步数据库问题
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 
 // simple route
 app.get("/", (req, res) => {
